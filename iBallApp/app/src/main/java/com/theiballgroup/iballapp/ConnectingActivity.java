@@ -1,27 +1,22 @@
 package com.theiballgroup.iballapp;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
-public class MainActivity extends Activity {
-
+public class ConnectingActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-
+        setContentView(R.layout.activity_connecting);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_connecting, menu);
         return true;
     }
 
@@ -40,10 +35,7 @@ public class MainActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-    /** Called when the user hits the connect button. */
-    public void connect(View view) {
-        Intent intent = new Intent(this, GameActivity.class);
-        startActivity(intent);
 
-    }
+    // When finish loading (hide the progress bar)
+    //findViewById(R.id.loadingPanel).setVisibility(View.GONE);
 }

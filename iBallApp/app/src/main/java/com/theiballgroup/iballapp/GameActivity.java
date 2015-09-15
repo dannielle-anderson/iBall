@@ -35,18 +35,14 @@ public class GameActivity extends Activity implements LocationListener {
         // Get the location manager
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
-        // List all providers:
-        List<String> providers = locationManager.getAllProviders();
-        for (String provider : providers) {
-            printProvider(provider);
-        }
-
         Criteria criteria = new Criteria();
+        criteria.setAccuracy(Criteria.ACCURACY_FINE);
         bestProvider = locationManager.getBestProvider(criteria, false);
-        output.append("\n\nBEST Provider:\n");
-        printProvider(bestProvider);
+        output.append("\nBest Provider:\n");
+        LocationProvider info = locationManager.getProvider(bestProvider);
+        output.append(info.toString() + "\n");
 
-        output.append("\n\nLocations (starting with last known):");
+        output.append("\nLocations (starting with last known):");
         Location location = locationManager.getLastKnownLocation(bestProvider);
         printLocation(location);
     }
@@ -55,7 +51,7 @@ public class GameActivity extends Activity implements LocationListener {
     @Override
     protected void onResume() {
         super.onResume();
-        locationManager.requestLocationUpdates(bestProvider, 1000, 0, this);
+        locationManager.requestLocationUpdates(bestProvider, 5000, 0, this);
     }
 
     /** Stop the updates when Activity is paused */
@@ -86,16 +82,15 @@ public class GameActivity extends Activity implements LocationListener {
                 + S[status] + ", Extras=" + extras);
     }
 
-    private void printProvider(String provider) {
-        LocationProvider info = locationManager.getProvider(provider);
-        output.append(info.toString() + "\n\n");
-    }
-
     private void printLocation(Location location) {
         if (location == null)
             output.append("\nLocation[unknown]\n\n");
         else
-            output.append("\n\n" + location.toString());
+            //output.append("\n\n" + location.toString());
+            output.append("\n\nLat / Long: " + String.valueOf(location.getLatitude()) + ", " +
+                    String.valueOf(location.getLongitude()) + "\nTime: " +
+                    String.valueOf(location.getTime()) + "\nAccuracy: " +
+                    String.valueOf(location.getAccuracy()));
     }
 
 }

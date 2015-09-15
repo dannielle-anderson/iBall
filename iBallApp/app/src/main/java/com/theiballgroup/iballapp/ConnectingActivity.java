@@ -1,9 +1,11 @@
 package com.theiballgroup.iballapp;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 public class ConnectingActivity extends Activity {
 
@@ -35,6 +37,12 @@ public class ConnectingActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
+    /** DUMMY CALL for the moment called when the hits the screen to move on from connecting. */
+    public void moveOn(View view) {
+        Intent intent = new Intent(this, GameActivity.class);
+        startActivity(intent);
+
+    }
 
     // When finish loading (hide the progress bar)
     //findViewById(R.id.loadingPanel).setVisibility(View.GONE);

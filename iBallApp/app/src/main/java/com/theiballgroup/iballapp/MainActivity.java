@@ -42,7 +42,7 @@ public class MainActivity extends Activity {
 
     /** Called when the user hits the connect button. */
     public void connect(View view) {
-        Intent intent = new Intent(this, GameActivity.class);
+        Intent intent = new Intent(this, ConnectingActivity.class);
         startActivity(intent);
 
     }

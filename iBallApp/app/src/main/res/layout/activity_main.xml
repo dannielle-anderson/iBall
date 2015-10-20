@@ -20,4 +20,13 @@
         android:onClick="connect"
         android:layout_alignParentTop="true" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Bluetooth Messages"
+        android:id="@+id/btResult"
+        android:layout_alignTop="@+id/connectButton"
+        android:textColor="#000000"
+        android:layout_centerHorizontal="true" />
+
 </RelativeLayout>

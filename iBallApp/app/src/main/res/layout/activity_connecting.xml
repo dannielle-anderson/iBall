@@ -50,11 +50,4 @@
         android:layout_centerHorizontal="true"
         android:onClick="moveOn" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Bluetooth Messages"
-        android:id="@+id/btResult"
-        android:layout_alignTop="@+id/progressBar"
-        android:layout_centerHorizontal="true" />
 </RelativeLayout>

@@ -1,6 +1,5 @@
 package com.theiballgroup.iballapp;
 
-import java.util.List;
 import android.app.Activity;
 import android.location.Criteria;
 import android.location.Location;
@@ -9,6 +8,7 @@ import android.location.LocationManager;
 import android.location.LocationProvider;
 import android.os.Bundle;
 import android.widget.TextView;
+import java.util.LinkedList;
 
 /**
  * A lot of this code is currently from an example by Marko Gargenta (Marakana, Inc.)
@@ -16,13 +16,19 @@ import android.widget.TextView;
  */
 
 public class GameActivity extends Activity implements LocationListener {
-    private static final String TAG = "LocationDemo";
     private static final String[] S = { "Out of Service",
             "Temporarily Unavailable", "Available" };
-
     private TextView output;
     private LocationManager locationManager;
     private String bestProvider;
+    private double startLatitude;
+    private double startLongitude;
+    private double endLatitude;
+    private double endLongitude;
+    private float[] distanceArray;
+    private float distance;
+    private LinkedList<Location> previousLocations;
+    private int LOCATIONLISTSIZE = 5;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -51,7 +57,8 @@ public class GameActivity extends Activity implements LocationListener {
     @Override
     protected void onResume() {
         super.onResume();
-        locationManager.requestLocationUpdates(bestProvider, 5000, 0, this);
+        locationManager.requestLocationUpdates(bestProvider, 3000, 0, this);
+
     }
 
     /** Stop the updates when Activity is paused */
@@ -62,6 +69,24 @@ public class GameActivity extends Activity implements LocationListener {
     }
 
     public void onLocationChanged(Location location) {
+
+        /**
+        previousLocations.addFirst(location);
+        if (previousLocations.size() > LOCATIONLISTSIZE) {
+            previousLocations.removeLast();
+        }
+
+
+        Location bestGuess = filterLocations();
+
+        startLatitude = endLatitude;
+        startLongitude = endLongitude;
+        endLatitude = previousLocations.getFirst().getLatitude();
+        endLongitude = previousLocations.getFirst().getLongitude();
+        Location.distanceBetween(startLatitude,startLongitude,endLatitude,endLongitude,distanceArray);
+        distance = distanceArray[0];
+        */
+
         printLocation(location);
     }
 
@@ -93,4 +118,39 @@ public class GameActivity extends Activity implements LocationListener {
                     String.valueOf(location.getAccuracy()));
     }
 
+    private Location filterLocations() {
+        Location weightedLocation = new Location(previousLocations.getFirst());
+        double[] weights = new double[LOCATIONLISTSIZE];
+        double[] normal = new double[LOCATIONLISTSIZE];
+        double doubleSum = 0;
+        double weightedLatitude = 0;
+        double weightedLongitude = 0;
+        long currentTime = previousLocations.getFirst().getTime();
+
+        for (int i = 1; i <= weights.length; i++) {
+            double timeWeight = 1000 / (currentTime - previousLocations.get(i).getTime() + 1000);
+            double accuracyWeight = 1 / (previousLocations.get(i).getAccuracy());
+            double pointWeight = timeWeight * accuracyWeight;
+            weights[i] = pointWeight;
+        }
+
+        for (double d:weights) {
+            doubleSum += d;
+        }
+
+        for(int k = 0; k < LOCATIONLISTSIZE; k++)
+        {
+            normal[k] = weights[k]/doubleSum;
+        }
+
+        for (int l = 0; l <= LOCATIONLISTSIZE; l++) {
+            weightedLatitude += previousLocations.get(l).getLatitude() * normal[l];
+            weightedLongitude += previousLocations.get(l).getLongitude() * normal[l];
+        }
+
+        weightedLocation.setLatitude(weightedLatitude);
+        weightedLocation.setLongitude(weightedLongitude);
+
+        return weightedLocation;
+    }
 }
